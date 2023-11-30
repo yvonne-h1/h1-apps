@@ -755,17 +755,9 @@
   // node_modules/@shopify/ui-extensions/build/esm/surfaces/checkout/components/TextBlock/TextBlock.mjs
   var TextBlock = createRemoteComponent("TextBlock");
 
-  // node_modules/@shopify/ui-extensions/build/esm/surfaces/checkout/components/TextField/TextField.mjs
-  var TextField = createRemoteComponent("TextField");
-
   // extensions/element-tests/src/Checkout.js
   var Checkout_default = extension("purchase.checkout.contact.render-after", renderApp);
-  function renderApp(root, { extension: extension2, i18n }) {
-    const textField = root.createComponent(TextField, {
-      label: "Your age",
-      type: "number",
-      onChange: setAge
-    });
+  function renderApp(root, api) {
     const description = root.createComponent(
       InlineLayout,
       {
@@ -814,8 +806,4 @@
   function buttonClick() {
     console.log("on click");
   }
-  function setAge() {
-    console.log("on change");
-  }
 })();
-//# sourceMappingURL=checkout-postcode-check.js.map

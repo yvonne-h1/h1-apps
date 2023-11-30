@@ -748,17 +748,17 @@
 
   // extensions/checkout-vat-check/src/Checkout.js
   var Checkout_default = extension("purchase.checkout.contact.render-after", renderApp);
-  function renderApp(root, { extension: extension2, buyerJourney }) {
-    const ageTarget = 18;
+  function renderApp(root, { extension: extension2, buyerJourney, buyerIdentity }) {
+    const vatNr = 123;
     const state = {
-      age: "",
+      vatNr: "",
       canBlockProgress: extension2.capabilities.current.includes("block_progress")
     };
     const textField = root.createComponent(TextField, {
       label: "VAT number",
       type: "number",
-      value: state.age,
-      onChange: setAge,
+      value: state.vatNr,
+      onChange: setVat,
       onInput: clearValidationErrors,
       required: state.canBlockProgress
     });
@@ -770,25 +770,25 @@
       });
     });
     buyerJourney.intercept(({ canBlockProgress }) => {
-      if (canBlockProgress && !isAgeSet()) {
+      if (canBlockProgress && !isVatSet()) {
         return {
           behavior: "block",
-          reason: "Age is required",
+          reason: "VAT is required",
           perform: (result) => {
             if (result.behavior === "block") {
-              textField.updateProps({ error: "Enter your age" });
+              textField.updateProps({ error: "Enter your VAT" });
             }
           }
         };
       }
-      if (canBlockProgress && !isAgeValid()) {
+      if (canBlockProgress && !isVatValid()) {
         return {
           behavior: "block",
-          reason: `Age is less than ${ageTarget}.`,
+          reason: `VAT is invalid.`,
           errors: [
             {
               // Show a validation error on the page
-              message: "You're not legally old enough to buy some of the items in your cart."
+              message: "Your VAT number is not valid. VAT should be 123."
             }
           ]
         };
@@ -800,16 +800,16 @@
         }
       };
     });
-    function setAge(value) {
-      state.age = value;
-      textField.updateProps({ value: state.age });
+    function setVat(value) {
+      state.vatNr = value;
+      textField.updateProps({ value: state.vatNr });
       clearValidationErrors();
     }
-    function isAgeSet() {
-      return state.age !== "";
+    function isVatSet() {
+      return state.vatNr !== "";
     }
-    function isAgeValid() {
-      return Number(state.age) >= ageTarget;
+    function isVatValid() {
+      return Number(state.vatNr) === vatNr;
     }
     function clearValidationErrors() {
       textField.updateProps({ error: void 0 });
@@ -824,3 +824,4 @@
     );
   }
 })();
+//# sourceMappingURL=checkout-vat-check.js.map

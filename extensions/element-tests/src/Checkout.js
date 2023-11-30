@@ -1,15 +1,9 @@
-import { extension, TextField, Icon, InlineLayout,Text,TextBlock, Banner, BlockStack, Button } from "@shopify/ui-extensions/checkout";
+import { extension, Icon, InlineLayout,Text,TextBlock, Banner, BlockStack, Button } from "@shopify/ui-extensions/checkout";
 
 // export default extension("purchase.checkout.block.render", renderApp);
 export default extension("purchase.checkout.contact.render-after", renderApp);
 
-function renderApp(root, { extension, i18n }) {
-
-  const textField = root.createComponent(TextField, {
-    label: "Your age",
-    type: "number",
-    onChange: setAge,
-  });
+function renderApp(root, api) {
 
   const description = root.createComponent(InlineLayout,
     {
@@ -55,13 +49,6 @@ function renderApp(root, { extension, i18n }) {
       button
     ]),
   )
-    //
-  //   root.createComponent(
-  //     TextField,
-  //     { label: "Hi!",
-  //     type: "number",
-  //     onChange: setAge, }
-  //   )
 };
 
 function buttonClick() {
