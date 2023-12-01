@@ -748,7 +748,7 @@
 
   // extensions/checkout-vat-check/src/Checkout.js
   var Checkout_default = extension("purchase.checkout.contact.render-after", renderApp);
-  function renderApp(root, { extension: extension2, buyerJourney, buyerIdentity }) {
+  function renderApp(root, { extension: extension2, buyerJourney }) {
     const vatNr = 123;
     const state = {
       vatNr: "",
@@ -824,4 +824,3 @@
     );
   }
 })();
-//# sourceMappingURL=checkout-vat-check.js.map

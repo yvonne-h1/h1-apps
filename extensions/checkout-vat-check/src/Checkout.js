@@ -8,17 +8,7 @@ import {
 // Set the entry point for the extension
 export default extension("purchase.checkout.contact.render-after", renderApp);
 
-function renderApp(root, { extension, buyerJourney, buyerIdentity }) {
-
-  // let welcomeMessage = "Get extra benefits when you register for an account."
-  // if (buyerIdentity) {
-  //   const { customer } = buyerIdentity.useCustomer();
-  //   welcomeMessage = "Hi, " + customer.firstName;
-  // }
-
-  // root.appendChild(
-  //   root.createComponent(Text, {size: "base"}, welcomeMessage)
-  // )
+function renderApp(root, { extension, buyerJourney }) {
 
   // Set the target age that a buyer must be to complete an order
   const vatNr = 123;

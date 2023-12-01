@@ -1,10 +1,47 @@
 import { extension, Icon, InlineLayout,Text,TextBlock, Banner, BlockStack, Button } from "@shopify/ui-extensions/checkout";
 
 // export default extension("purchase.checkout.block.render", renderApp);
-export default extension("purchase.checkout.contact.render-after", renderApp);
+export default extension("purchase.checkout.delivery-address.render-before", renderApp);
 
-function renderApp(root, api) {
+function renderApp(root, { buyerJourney, shippingAddress, buyerIdentity }) {
+  const postcodeRegex = /^[1-9][0-9]{3} ?[a-z]{2}$/ig;
 
+  let address = shippingAddress?.current;
+  shippingAddress?.subscribe((newAddress) => {
+    address = newAddress;
+  });
+
+  buyerJourney.intercept(({canBlockProgress}) => {
+    const result = postcodeRegex.test(address.zip);
+    // const url = `https://api.postcode.eu/nl/v1/addresses/postcode/${address.zip}/${houseNumber}/${houseNumberAddition}`
+    // https://api.postcode.eu/nl/v1/addresses/postcode/{postcode}/{houseNumber}/{houseNumberAddition}
+
+    return canBlockProgress && !result
+      ? {
+          behavior: 'block',
+          reason: 'Invalid ZIP code',
+          errors: [
+            {
+              message:
+                'Sorry, your zip is invalid.',
+              // Show an error underneath the country code field
+              target:
+                '$.cart.deliveryGroups[0].deliveryAddress.zip',
+            },
+            {
+              // In addition, show an error at the page level
+              message:
+                'Please use a different zip code.',
+            },
+          ],
+        }
+      : {
+          behavior: 'allow',
+        };
+    },
+  );
+
+  /** Test elements */
   const description = root.createComponent(InlineLayout,
     {
       spacing: "base",
@@ -20,9 +57,15 @@ function renderApp(root, api) {
     ]
   )
 
+  let welcomeMessage = "Get extra benefits when you register for an account."
+  if (buyerIdentity.customer.current) {
+    const customer = buyerIdentity.customer.current
+    welcomeMessage = "Hi, " + customer.firstName;
+  }
+
   const banner = root.createComponent(
       Banner,
-      { title: "Oh hi!!",
+      { title: welcomeMessage,
         status: "success",
         collapsible: true,
       }, "Welcome to the checkout!"

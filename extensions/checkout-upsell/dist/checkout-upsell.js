@@ -983,4 +983,3 @@
     merchandise.id = variants.nodes[0].id;
   }
 })();
-//# sourceMappingURL=checkout-upsell.js.map

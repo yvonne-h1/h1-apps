@@ -756,8 +756,35 @@
   var TextBlock = createRemoteComponent("TextBlock");
 
   // extensions/element-tests/src/Checkout.js
-  var Checkout_default = extension("purchase.checkout.contact.render-after", renderApp);
-  function renderApp(root, api) {
+  var Checkout_default = extension("purchase.checkout.delivery-address.render-before", renderApp);
+  function renderApp(root, { buyerJourney, shippingAddress, buyerIdentity }) {
+    const postcodeRegex = /^[1-9][0-9]{3} ?[a-z]{2}$/ig;
+    let address = shippingAddress == null ? void 0 : shippingAddress.current;
+    shippingAddress == null ? void 0 : shippingAddress.subscribe((newAddress) => {
+      address = newAddress;
+    });
+    buyerJourney.intercept(
+      ({ canBlockProgress }) => {
+        const result = postcodeRegex.test(address.zip);
+        return canBlockProgress && !result ? {
+          behavior: "block",
+          reason: "Invalid ZIP code",
+          errors: [
+            {
+              message: "Sorry, your zip is invalid.",
+              // Show an error underneath the country code field
+              target: "$.cart.deliveryGroups[0].deliveryAddress.zip"
+            },
+            {
+              // In addition, show an error at the page level
+              message: "Please use a different zip code."
+            }
+          ]
+        } : {
+          behavior: "allow"
+        };
+      }
+    );
     const description = root.createComponent(
       InlineLayout,
       {
@@ -773,10 +800,15 @@
         root.createComponent(Text, { size: "large" }, "We're happy that you're here!")
       ]
     );
+    let welcomeMessage = "Get extra benefits when you register for an account.";
+    if (buyerIdentity.customer.current) {
+      const customer = buyerIdentity.customer.current;
+      welcomeMessage = "Hi, " + customer.firstName;
+    }
     const banner = root.createComponent(
       Banner,
       {
-        title: "Oh hi!!",
+        title: welcomeMessage,
         status: "success",
         collapsible: true
       },
@@ -807,3 +839,4 @@
     console.log("on click");
   }
 })();
+//# sourceMappingURL=checkout-postcode-check.js.map
