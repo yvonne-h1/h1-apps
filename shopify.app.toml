@@ -1,6 +1,6 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-name = "checkout-postcode-check"
+name = "element-tests"
 client_id = "fa223ff1c0f6022e6bda2c5e58cc133c"
 application_url = "https://shopify.dev/apps/default-app-home"
 embedded = true

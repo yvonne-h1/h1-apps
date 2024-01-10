@@ -8,7 +8,7 @@ api_version = "2023-10"
 [[extensions]]
 type = "ui_extension"
 name = "Element tests"
-handle = "checkout-postcode-check"
+handle = "element-tests"
 
 # Controls where in Shopify your extension will be injected,
 # and the file that contains your extension’s source code. Learn more:
@@ -26,8 +26,8 @@ api_access = true
 # Gives your extension access to make external network calls, using the
 # JavaScript `fetch()` API. Learn more:
 # https://shopify.dev/docs/api/checkout-ui-extensions/unstable/configuration#network-access
-network_access = true
-block_progress = true
+network_access = false
+block_progress = false
 
 # Loads metafields on checkout resources, including the cart,
 # products, customers, and more. Learn more:
